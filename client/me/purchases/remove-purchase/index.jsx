@@ -210,7 +210,7 @@ class RemovePurchase extends Component {
 						// `receiveDeletedSiteDeprecated` here because the site
 						// exists in `sites-list` as well as the global store.
 						receiveDeletedSiteDeprecated( selectedSite );
-						this.props.receiveDeletedSite( selectedSite );
+						this.props.receiveDeletedSite( selectedSite.ID );
 						this.props.setAllSitesSelected();
 					}
 
