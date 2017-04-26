@@ -9,6 +9,7 @@ import { truncate, includes } from 'lodash';
  */
 import { successNotice, errorNotice } from 'state/notices/actions';
 import { getSitePost } from 'state/posts/selectors';
+import { getSiteDomain } from 'state/sites/selectors';
 import {
 	ACCOUNT_RECOVERY_SETTINGS_FETCH_FAILED,
 	ACCOUNT_RECOVERY_SETTINGS_UPDATE_SUCCESS,
@@ -44,12 +45,16 @@ import {
 	PUBLICIZE_CONNECTION_REFRESH_FAILURE,
 	PUBLICIZE_CONNECTION_UPDATE,
 	PUBLICIZE_CONNECTION_UPDATE_FAILURE,
+	SITE_DELETE,
+	SITE_DELETE_SUCCESS,
+	SITE_DELETE_FAILURE,
 	SITE_MONITOR_SETTINGS_UPDATE_SUCCESS,
 	SITE_MONITOR_SETTINGS_UPDATE_FAILURE,
 	THEME_DELETE_FAILURE,
 	THEME_DELETE_SUCCESS,
 	THEME_ACTIVATE_FAILURE,
 } from 'state/action-types';
+import purchasesPaths from 'me/purchases/paths';
 
 import { dispatchSuccess, dispatchError } from './utils';
 
@@ -201,6 +206,32 @@ const onSiteMonitorSettingsUpdateFailure = ( dispatch ) => dispatch(
 	successNotice( translate( 'There was a problem saving your changes. Please, try again.' ) )
 );
 
+const onSiteDelete = ( dispatch, { siteId }, getState ) => dispatch(
+	successNotice( translate( '%(siteDomain)s is being deleted.', {
+		args: { siteDomain: getSiteDomain( getState(), siteId ) }
+	} ), { duration: 5000 } )
+);
+
+const onSiteDeleteSuccess = ( dispatch, { siteId }, getState ) => dispatch(
+	successNotice( translate( '%(siteDomain)s has been deleted.', {
+		args: { siteDomain: getSiteDomain( getState(), siteId ) }
+	} ), { duration: 5000 } )
+);
+
+const onSiteDeleteFailure = ( dispatch, { error } ) => {
+	if ( error.error === 'active-subscriptions' ) {
+		dispatch( errorNotice( translate( 'You must cancel any active subscriptions prior to deleting your site.' ), {
+			showDismiss: false,
+			button: translate( 'Manage Purchases' ),
+			href: purchasesPaths.purchasesRoot()
+		} ) );
+		return;
+	}
+	dispatch(
+		errorNotice( translate( 'There was a problem deleting the site. Please, try again.' ) )
+	);
+};
+
 /**
  * Handler action type mapping
  */
@@ -244,6 +275,9 @@ export const handlers = {
 	[ PUBLICIZE_CONNECTION_UPDATE ]: onPublicizeConnectionUpdate,
 	[ PUBLICIZE_CONNECTION_UPDATE_FAILURE ]: onPublicizeConnectionUpdateFailure,
 	[ GUIDED_TRANSFER_HOST_DETAILS_SAVE_SUCCESS ]: dispatchSuccess( translate( 'Thanks for confirming those details!' ) ),
+	[ SITE_DELETE ]: onSiteDelete,
+	[ SITE_DELETE_FAILURE ]: onSiteDeleteFailure,
+	[ SITE_DELETE_SUCCESS ]: onSiteDeleteSuccess,
 	[ SITE_MONITOR_SETTINGS_UPDATE_SUCCESS ]: onSiteMonitorSettingsUpdateSuccess,
 	[ SITE_MONITOR_SETTINGS_UPDATE_FAILURE ]: onSiteMonitorSettingsUpdateFailure,
 	[ THEME_DELETE_FAILURE ]: onThemeDeleteFailure,
