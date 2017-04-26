@@ -323,6 +323,18 @@ export function getSiteOption( state, siteId, optionName ) {
 }
 
 /**
+ * Returns true if a network request is in progress to delete the specified site, or
+ * false otherwise.
+ *
+ * @param  {Object}  state  Global state tree
+ * @param  {Number}  siteId Site ID
+ * @return {Boolean}        Whether deletion is in progress
+ */
+export function isDeletingSite( state, siteId ) {
+	return !! state.sites.deleting[ siteId ];
+}
+
+/**
  * Returns true if we are requesting all sites.
  * @param {Object}    state  Global state tree
  * @return {Boolean}        Request State
