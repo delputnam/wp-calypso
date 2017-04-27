@@ -18,7 +18,7 @@ import ReaderMain from 'components/reader-main';
 import { getReaderFeedsForQuery } from 'state/selectors';
 import QueryReaderFeedsSearch from 'components/data/query-reader-feeds-search';
 import FollowingManageSubscriptions from './subscriptions';
-import SitesWindowScroller from './sites-window-scroller';
+import FollowingManageSearchFeedsResults from './feed-search-results';
 import MobileBackToSidebar from 'components/mobile-back-to-sidebar';
 import { requestFeedSearch } from 'state/reader/feed-searches/actions';
 
@@ -32,10 +32,13 @@ class FollowingManage extends Component {
 	static defaultProps = {
 		subsQuery: '',
 		sitesQuery: '',
-		forceRefresh: false,
 	}
 
-	state = { width: 800 };
+	state = {
+		width: 800,
+		forceRefresh: false,
+		showMoreResults: false,
+	};
 
 	// TODO make this common between our different search pages?
 	updateQuery = ( newValue ) => {
@@ -53,6 +56,11 @@ class FollowingManage extends Component {
 			}
 			page.replace( searchUrl );
 		}
+	}
+
+	handleSearchClosed = () => {
+		this.scrollToTop();
+		this.setState( { showMoreResults: false } );
 	}
 
 	scrollToTop = () => {
@@ -95,6 +103,7 @@ class FollowingManage extends Component {
 	}
 
 	fetchNextPage = offset => this.props.requestFeedSearch( this.props.sitesQuery, offset );
+	handleShowMoreClicked = () => this.setState( { showMoreResults: true } );
 
 	render() {
 		const { sitesQuery, subsQuery, translate, searchResults } = this.props;
@@ -113,7 +122,7 @@ class FollowingManage extends Component {
 					<CompactCard className="following-manage__input-card">
 						<SearchInput
 							onSearch={ this.updateQuery }
-							onSearchClose={ this.scrollToTop }
+							onSearchClose={ this.handleSearchClosed }
 							autoFocus={ this.props.autoFocusInput }
 							delaySearch={ true }
 							delayTimeout={ 500 }
@@ -124,23 +133,21 @@ class FollowingManage extends Component {
 						</SearchInput>
 					</CompactCard>
 				</div>
-				{ ! sitesQuery && (
+				{ !! sitesQuery && (
+					<FollowingManageSearchFeedsResults
+						searchResults={ searchResults }
+						showMoreResults={ this.state.showMoreResults }
+						showMoreResultsClicked={ this.handleShowMoreClicked }
+						width={ this.state.width }
+						fetchNextPage={ this.fetchNextPage }
+						forceRefresh={ this.state.forceRefresh }
+					/>
+				) }
+				{ ! ( !! sitesQuery && this.state.showMoreResults ) && (
 					<FollowingManageSubscriptions
 						width={ this.state.width }
 						query={ subsQuery }
 					/>
-				) }
-				{ ( !! sitesQuery && searchResults && (
-					!! ( searchResults.length > 0 )
-					? <SitesWindowScroller
-							sites={ searchResults }
-							width={ this.state.width }
-							fetchNextPage={ this.fetchNextPage }
-							remoteTotalCount={ 200 }
-							forceRefresh={ this.state.forceRefresh }
-						/>
-						: <p> { translate( 'There were no site results for your query.' ) } </p>
-					)
 				) }
 			</ReaderMain>
 		);
