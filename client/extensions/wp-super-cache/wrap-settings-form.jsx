@@ -21,12 +21,22 @@ import trackForm from 'lib/track-form';
 import QueryNotices from './data/query-notices';
 import QuerySettings from './data/query-settings';
 import {
+	getSelectedSite,
+	getSelectedSiteId,
+} from 'state/ui/selectors';
+import {
+	deleteCache,
+} from './state/cache/actions';
+import {
 	errorNotice,
 	removeNotice,
 	successNotice,
 } from 'state/notices/actions';
 import { saveSettings } from './state/settings/actions';
-import { getSelectedSiteId } from 'state/ui/selectors';
+import {
+	isCacheDeleteSuccessful,
+	isDeletingCache,
+} from './state/cache/selectors';
 import { getNotices } from './state/notices/selectors';
 import {
 	getSettings,
@@ -178,6 +188,7 @@ const wrapSettingsForm = getFormSettings => SettingsForm => {
 
 	const connectComponent = connect(
 		state => {
+			const site = getSelectedSite( state ) || {};
 			const siteId = getSelectedSiteId( state );
 			const isSaving = isSavingSettings( state, siteId );
 			const isSaveSuccessful = isSettingsSaveSuccessful( state, siteId );
@@ -225,19 +236,25 @@ const wrapSettingsForm = getFormSettings => SettingsForm => {
 				'supercache',
 				'wpcache',
 			] ) );
+			const isDeleting = isDeletingCache( state, siteId );
+			const isDeleteSuccessful = isCacheDeleteSuccessful( state, siteId );
 
 			return {
+				isDeleting,
 				isRequesting,
 				isSaveSuccessful,
 				isSaving,
+				isDeleteSuccessful,
 				notices,
 				settings,
 				settingsFields,
+				site,
 				siteId,
 			};
 		},
 		dispatch => {
 			const boundActionCreators = bindActionCreators( {
+				deleteCache,
 				errorNotice,
 				removeNotice,
 				saveSettings,
