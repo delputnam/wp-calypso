@@ -33,6 +33,7 @@ describe( 'mapped-domain', () => {
 	useFakeDom.withContainer();
 	useMockery( mockery => {
 		mockery.registerMock( 'lib/analytics', {} );
+		mockery.registerMock( './style', {} );
 	} );
 
 	before( () => {
