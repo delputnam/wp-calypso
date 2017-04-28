@@ -19,16 +19,38 @@ import WrapSettingsForm from './wrap-settings-form';
 class EasyTab extends Component {
 	state = {
 		httpOnly: true,
+		isDeleting: false,
+		isDeletingAll: false,
+	}
+
+	componentWillReceiveProps( nextProps ) {
+		if ( this.props.isDeleting && ! nextProps.isDeleting ) {
+			this.setState( {
+				isDeleting: false,
+				isDeletingAll: false,
+			} );
+		}
 	}
 
 	handleHttpOnlyChange = () => {
 		this.setState( { httpOnly: ! this.state.httpOnly } );
 	}
 
+	deleteCache = ( event ) => {
+		this.setState( { isDeleting: true } );
+		this.props.deleteCache( this.props.siteId, { [ event.target.name ]: true } );
+	}
+
+	deleteAllCaches = ( event ) => {
+		this.setState( { isDeletingAll: true } );
+		this.props.deleteCache( this.props.siteId, { [ event.target.name ]: true } );
+	}
+
 	render() {
 		const {
 			fields,
 			handleAutosavingToggle,
+			isDeleting,
 			isRequesting,
 			isSaving,
 			site,
@@ -106,11 +128,21 @@ class EasyTab extends Component {
 						) }
 					</p>
 					<div>
-						<Button compact>
+						<Button
+							compact
+							busy={ this.state.isDeleting }
+							disabled={ isDeleting }
+							name="wp_delete_cache"
+							onClick={ this.deleteCache }>
 							{ translate( 'Delete Cache' ) }
 						</Button>
 						{ site.jetpack && site.is_multisite &&
-							<Button compact>
+							<Button
+								compact
+								busy={ this.state.isDeletingAll }
+								disabled={ isDeleting }
+								name="wp_delete_all_cache"
+								onClick={ this.deleteAllCaches }>
 								{ translate( 'Delete Cache On All Blogs' ) }
 							</Button>
 						}
