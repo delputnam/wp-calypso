@@ -79,6 +79,8 @@ const wrapSettingsForm = getFormSettings => SettingsForm => {
 					);
 				}
 			}
+
+			this.showCacheDeleteNotice( prevProps );
 		}
 
 		updateDirtyFields() {
@@ -105,6 +107,32 @@ const wrapSettingsForm = getFormSettings => SettingsForm => {
 			const nextNonDirtyFields = omit( persistedFields, nextDirtyFields );
 			this.props.replaceFields( nextNonDirtyFields );
 		}
+
+		showCacheDeleteNotice = ( prevProps ) => {
+			if ( this.props.isDeleting || ! prevProps.isDeleting ) {
+				return;
+			}
+
+			const {
+				isDeleteSuccessful,
+				site,
+				translate,
+			} = this.props;
+
+			this.props.removeNotice( 'wpsc-settings-save' );
+
+			if ( isDeleteSuccessful ) {
+				this.props.successNotice(
+					translate( 'Cache successfully deleted on %(site)s.', { args: { site: site && site.title } } ),
+					{ id: 'wpsc-cache-delete' }
+				);
+			} else {
+				this.props.errorNotice(
+					translate( 'There was a problem deleting the cache. Please try again.' ),
+					{ id: 'wpsc-cache-delete' }
+				);
+			}
+		};
 
 		handleChange = field => event => {
 			this.props.updateFields( { [ field ]: event.target.value } );
@@ -162,6 +190,7 @@ const wrapSettingsForm = getFormSettings => SettingsForm => {
 			} = this.props;
 
 			this.props.removeNotice( 'wpsc-settings-save' );
+			this.props.removeNotice( 'wpsc-cache-delete' );
 			this.props.saveSettings( siteId, pick( fields, settingsFields ) );
 		};
 
