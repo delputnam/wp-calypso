@@ -183,9 +183,6 @@ const wrapSettingsForm = getFormSettings => SettingsForm => {
 			const isSaveSuccessful = isSettingsSaveSuccessful( state, siteId );
 			const notices = getNotices( state, siteId );
 			const settings = Object.assign( {}, getSettings( state, siteId ), {
-				// Miscellaneous
-				cache_compression_disabled: false,
-
 				// Accepted Filenames & Rejected URIs
 				accepted_files: 'wp-comments-popup.php',
 				rejected_uri: 'wp-.*\.php',
@@ -207,7 +204,6 @@ const wrapSettingsForm = getFormSettings => SettingsForm => {
 			const isRequesting = isRequestingSettings( state, siteId ) && ! settings;
 			// Don't include read-only fields when saving.
 			const settingsFields = keys( omit( settings, [
-				'cache_compression_disabled',
 				'cache_direct_pages',
 				'cache_disable_locking',
 				'cache_mobile_browsers',
