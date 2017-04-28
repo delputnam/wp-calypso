@@ -16,9 +16,8 @@ import SegmentedControl from 'components/segmented-control';
 import { getSelectedSiteSlug } from 'state/ui/selectors';
 
 const StatsNavigation = props => {
-	const { translate, slug } = props;
-	const section = 'orders';
-	const sectionTitles = {
+	const { translate, slug, type } = props;
+	const types = {
 		orders: translate( 'Orders' ),
 		customers: translate( 'Customers' ),
 		stock: translate( 'Stock' ),
@@ -27,16 +26,16 @@ const StatsNavigation = props => {
 		subscriptions: translate( 'Subscriptions' ),
 	};
 	return (
-		<SectionNav selectedText={ sectionTitles[ section ] }>
+		<SectionNav selectedText={ types[ type ] }>
 			<NavTabs label={ translate( 'Stats' ) }>
-				<NavItem path={ `/store/stats/${ slug }` } selected={ section === 'orders' }>
-					{ sectionTitles.orders }
+				<NavItem path={ `/store/stats/${ slug }` } selected={ type === 'orders' }>
+					{ types.orders }
 				</NavItem>
-				<NavItem path={ `/store/stats/${ slug }` } selected={ section === 'customers' }>
-					{ sectionTitles.customers }
+				<NavItem path={ `/store/stats/${ slug }` } selected={ type === 'customers' }>
+					{ types.customers }
 				</NavItem>
-				<NavItem path={ `/store/stats/${ slug }` } selected={ section === 'stock' }>
-					{ sectionTitles.stock }
+				<NavItem path={ `/store/stats/${ slug }` } selected={ type === 'stock' }>
+					{ types.stock }
 				</NavItem>
 			</NavTabs>
 			<SegmentedControl

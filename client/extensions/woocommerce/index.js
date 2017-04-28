@@ -13,6 +13,7 @@ import { renderWithReduxStore } from 'lib/react-helpers';
 import ProductCreate from './app/products/product-create';
 import Dashboard from './app/dashboard';
 import Stats from './app/stats';
+import StatsController from './app/stats/controller';
 
 const Controller = {
 	dashboard: function( context ) {
@@ -47,6 +48,6 @@ export default function() {
 	}
 
 	if ( config.isEnabled( 'woocommerce/extension-stats' ) ) {
-		page( '/store/stats/:site?', siteSelection, navigation, Controller.stats );
+		page( '/store/stats/:type/:period/:segment/:site', siteSelection, navigation, StatsController );
 	}
 }
