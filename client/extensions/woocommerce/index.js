@@ -12,7 +12,6 @@ import { navigation, siteSelection } from 'my-sites/controller';
 import { renderWithReduxStore } from 'lib/react-helpers';
 import ProductCreate from './app/products/product-create';
 import Dashboard from './app/dashboard';
-import Stats from './app/stats';
 import StatsController from './app/stats/controller';
 
 const Controller = {
@@ -27,14 +26,6 @@ const Controller = {
 	addProduct: function( context ) {
 		renderWithReduxStore(
 			React.createElement( ProductCreate, { } ),
-			document.getElementById( 'primary' ),
-			context.store
-		);
-	},
-
-	stats: function( context ) {
-		renderWithReduxStore(
-			React.createElement( Stats, { } ),
 			document.getElementById( 'primary' ),
 			context.store
 		);

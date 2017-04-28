@@ -9,7 +9,7 @@ import React, { Component } from 'react';
 import Main from 'components/main';
 import StatsNavigation from './stats-navigation';
 
-class Stats extends Component {
+export default class Stats extends Component {
 	render() {
 		const { type } = this.props;
 		return (
@@ -19,5 +19,3 @@ class Stats extends Component {
 		);
 	}
 }
-
-export default Stats;
