@@ -74,6 +74,10 @@ const Checkout = React.createClass( {
 			return;
 		}
 
+		if ( this.props.cart.hasLoadedFromServer ) {
+			this.trackPageView();
+		}
+
 		if ( this.props.cart.hasLoadedFromServer && this.props.product ) {
 			this.addProductToCart();
 		}
