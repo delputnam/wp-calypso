@@ -4,12 +4,14 @@
 import React from 'react';
 import { localize } from 'i18n-calypso';
 import { take, map } from 'lodash';
+import Gridicon from 'gridicons';
 
 /**
  * Internal Dependencies
  */
 import ConnectedSubscriptionListItem from './connected-subscription-list-item';
 import SitesWindowScroller from './sites-window-scroller';
+import button from 'components/button';
 
 const FollowingManageSearchFeedsResults = ( {
 	showMoreResults,
@@ -45,12 +47,12 @@ const FollowingManageSearchFeedsResults = ( {
 		return (
 			<div className="following-manage__search-results">
 				{ resultsToShow }
-				<div className="following-manage__show-more-button-div">
-					<button
+				<div className="following-manage__show-more">
+					<button compact primary icon
 						onClick={ showMoreResultsClicked }
-						className="following-manage__show-more-button"
-					>
-						Show more
+						className="following-manage__show-more-button button">
+							<Gridicon icon="chevron-down" />
+							Show more
 					</button>
 				</div>
 			</div>
