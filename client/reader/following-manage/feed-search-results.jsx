@@ -45,12 +45,14 @@ const FollowingManageSearchFeedsResults = ( {
 		return (
 			<div className="following-manage__search-results">
 				{ resultsToShow }
-				<button
-					onClick={ showMoreResultsClicked }
-					className="following-manage__show-more-button"
-				>
-					Show more
-				</button>
+				<div className="following-manage__show-more-button">
+					<button
+						onClick={ showMoreResultsClicked }
+						className="button"
+					>
+						Show more
+					</button>
+				</div>
 			</div>
 		);
 	}
